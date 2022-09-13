@@ -1,0 +1,10 @@
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\bin\Debug\netcoreapp3.1\GraphLibrary.deps.json
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\bin\Debug\netcoreapp3.1\GraphLibrary.dll
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\bin\Debug\netcoreapp3.1\GraphLibrary.pdb
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.csproj.AssemblyReference.cache
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.AssemblyInfoInputs.cache
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.AssemblyInfo.cs
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.csproj.CoreCompileInputs.cache
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.dll
+C:\prog\CODE\C#\GraphTheory_L1\GraphLibrary\obj\Debug\netcoreapp3.1\GraphLibrary.pdb

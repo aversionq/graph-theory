@@ -1,0 +1,17 @@
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.exe
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.deps.json
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.runtimeconfig.json
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.runtimeconfig.dev.json
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.dll
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\Graph_ConsoleUI.pdb
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\GraphLibrary.dll
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\GraphLibrary.pdb
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.csproj.AssemblyReference.cache
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.GeneratedMSBuildEditorConfig.editorconfig
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.AssemblyInfoInputs.cache
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.AssemblyInfo.cs
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.csproj.CoreCompileInputs.cache
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.csproj.CopyComplete
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.dll
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.pdb
+C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\obj\Debug\netcoreapp3.1\Graph_ConsoleUI.genruntimeconfig.cache
