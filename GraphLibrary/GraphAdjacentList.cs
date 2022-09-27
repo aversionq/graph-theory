@@ -6,7 +6,7 @@ namespace GraphLibrary
 {
     public class GraphAdjacentList<T>
     {
-        private Dictionary<T, List<T>> _adjList;
+        internal Dictionary<T, List<T>> _adjList;
 
         public GraphAdjacentList()
         {
@@ -19,6 +19,14 @@ namespace GraphLibrary
                 _adjList.Add(node.Name, node.Related);
             }
         }
+
+        //internal GraphAdjacentList(Dictionary<T, List<T>> adj) : this()
+        //{
+        //    foreach (var kvp in adj)
+        //    {
+        //        _adjList.Add(kvp.Key, kvp.Value);
+        //    }
+        //}
 
         internal void AddNode(GraphNode<T> node)
         {
@@ -52,6 +60,35 @@ namespace GraphLibrary
             _adjList[name1].Remove(name2);
             _adjList[name2].Remove(name1);
         }
+
+        internal string GraphToTxt()
+        {
+            StringBuilder adj = new StringBuilder();
+
+            foreach (var kvp in _adjList)
+            {
+                adj.Append($"{kvp.Key}: ");
+                foreach (var node in kvp.Value)
+                {
+                    adj.Append($"{node} ");
+                }
+                adj.Append(Environment.NewLine);
+            }
+
+            return adj.ToString();
+        }
+
+        //internal Dictionary<T, List<T>> CopyAdjList()
+        //{
+        //    Dictionary<T, List<T>> adjListCopy = new Dictionary<T, List<T>>();
+
+        //    foreach (var kvp in _adjList)
+        //    {
+        //        adjListCopy.Add(kvp.Key, kvp.Value);
+        //    }
+
+        //    return adjListCopy;
+        //}
 
         internal bool IsNodeExists(T name) => _adjList.ContainsKey(name);
 

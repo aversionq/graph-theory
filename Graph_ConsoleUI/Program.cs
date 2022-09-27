@@ -69,6 +69,20 @@ namespace Graph_ConsoleUI
 
             graph.RemoveNode(2);
             Console.WriteLine(graph);
+
+            var graphNew = new Graph<int>(@"C:\prog\CODE\C#\GraphTheory_L1\graph1.txt");
+            Console.WriteLine(graphNew);
+
+            graph.WriteGraph("test123.txt");
+
+            var graphTest = new Graph<int>(graph);
+            Console.WriteLine(graphTest);
+            Console.WriteLine(graph);
+
+            Console.WriteLine("removed 3-4 from graphTest. Graph:");
+            graphTest.RemoveEdge(3, 4);
+            Console.WriteLine(graph);
+            Console.WriteLine(graphTest);
         }
     }
 }
