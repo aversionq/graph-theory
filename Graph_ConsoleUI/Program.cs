@@ -72,6 +72,8 @@ namespace Graph_ConsoleUI
 
             var graphNew = new Graph<int>(@"C:\prog\CODE\C#\GraphTheory_L1\graph1.txt");
             Console.WriteLine(graphNew);
+            Console.WriteLine(graphNew.IsDirected);
+            Console.WriteLine(graphNew.IsWeighted);
 
             graph.WriteGraph("test123.txt");
 

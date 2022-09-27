@@ -30,6 +30,9 @@ namespace GraphLibrary
         }
         public Graph(Graph<T> graph)
         {
+            this.IsDirected = graph.IsDirected;
+            this.IsWeighted = graph.IsWeighted;
+
             List<GraphNode<T>> graphNodes = new List<GraphNode<T>>();
             foreach (var kvp in graph.AdjacentList._adjList)
             {
@@ -63,12 +66,12 @@ namespace GraphLibrary
 
         public void AddNode(GraphNode<T> node)
         {
-            AdjacentList.AddNode(node);
+            AdjacentList.AddNode(node, IsDirected);
         }
 
         public void AddEdge(T name1, T name2)
         {
-            AdjacentList.AddEdge(name1, name2);
+            AdjacentList.AddEdge(name1, name2, IsDirected);
         }
 
         public void RemoveNode(T name)
@@ -78,7 +81,7 @@ namespace GraphLibrary
 
         public void RemoveEdge(T name1, T name2)
         {
-            AdjacentList.RemoveEdge(name1, name2);
+            AdjacentList.RemoveEdge(name1, name2, IsDirected);
         }
 
         public void WriteGraph(string fileName)
@@ -100,7 +103,11 @@ namespace GraphLibrary
         {
             List<GraphNode<T>> graphNodes = new List<GraphNode<T>>();
 
-            foreach (var item in graphTxt)
+            var graphOptions = graphTxt.FirstOrDefault().Split(" ");
+            IsDirected = graphOptions[0] == "1";
+            IsWeighted = graphOptions[1] == "1";
+
+            foreach (var item in graphTxt.Skip(1))
             {
                 var nodeName = item.Split(':')[0];
                 var nodeRelated = item.Split(':')[1].Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();

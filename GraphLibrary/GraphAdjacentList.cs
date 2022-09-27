@@ -28,19 +28,25 @@ namespace GraphLibrary
         //    }
         //}
 
-        internal void AddNode(GraphNode<T> node)
+        internal void AddNode(GraphNode<T> node, bool isDirected)
         {
-            foreach (var value in node.Related)
+            if (!isDirected)
             {
-                _adjList[value].Add(node.Name);
+                foreach (var value in node.Related)
+                {
+                    _adjList[value].Add(node.Name);
+                }
             }
             _adjList.Add(node.Name, node.Related);
         }
 
-        internal void AddEdge(T name1, T name2)
+        internal void AddEdge(T name1, T name2, bool isDirected)
         {
             _adjList[name1].Add(name2);
-            _adjList[name2].Add(name1);
+            if (!isDirected)
+            {
+                _adjList[name2].Add(name1);
+            }
         }
 
         internal void RemoveNode(T name)
@@ -55,10 +61,13 @@ namespace GraphLibrary
             _adjList.Remove(name);
         }
 
-        internal void RemoveEdge(T name1, T name2)
+        internal void RemoveEdge(T name1, T name2, bool isDirected)
         {
             _adjList[name1].Remove(name2);
-            _adjList[name2].Remove(name1);
+            if (!isDirected)
+            {
+                _adjList[name2].Remove(name1);
+            }
         }
 
         internal string GraphToTxt()
