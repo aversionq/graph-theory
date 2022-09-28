@@ -6,11 +6,11 @@ namespace GraphLibrary
 {
     public class GraphAdjacentList<T>
     {
-        internal Dictionary<T, List<T>> _adjList;
+        internal Dictionary<T, List<Dictionary<T, int>>> _adjList;
 
         public GraphAdjacentList()
         {
-            _adjList = new Dictionary<T, List<T>>();
+            _adjList = new Dictionary<T, List<Dictionary<T, int>>>();
         }
         public GraphAdjacentList(List<GraphNode<T>> graphNodes) : this()
         {
@@ -34,18 +34,27 @@ namespace GraphLibrary
             {
                 foreach (var value in node.Related)
                 {
-                    _adjList[value].Add(node.Name);
+                    foreach (var kvp in value)
+                    {
+                        _adjList[kvp.Key].Add(value);
+                    }
                 }
             }
             _adjList.Add(node.Name, node.Related);
         }
 
-        internal void AddEdge(T name1, T name2, bool isDirected)
+        internal void AddEdge(T name1, T name2, bool isDirected, int weight)
         {
-            _adjList[name1].Add(name2);
+            _adjList[name1].Add(new Dictionary<T, int>
+            {
+                {name2, weight},
+            });
             if (!isDirected)
             {
-                _adjList[name2].Add(name1);
+                _adjList[name2].Add(new Dictionary<T, int>
+                {
+                    {name1, weight},
+                });
             }
         }
 

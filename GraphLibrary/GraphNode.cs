@@ -7,17 +7,17 @@ namespace GraphLibrary
     public class GraphNode<T>
     {
         internal T Name { get; set; }
-        internal List<T> Related { get; set; }
+        internal List<Dictionary<T, int>> Related { get; set; }
 
         public GraphNode()
         {
-            Related = new List<T>();
+            Related = new List<Dictionary<T, int>>();
         }
         public GraphNode(T name) : this()
         {
             this.Name = name;
         }
-        public GraphNode(T name, List<T> related) : this(name)
+        public GraphNode(T name, List<Dictionary<T, int>> related) : this(name)
         {
             Related = related;
         }
