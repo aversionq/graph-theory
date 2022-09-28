@@ -38,10 +38,10 @@ namespace GraphLibrary
             List<GraphNode<T>> graphNodes = new List<GraphNode<T>>();
             foreach (var kvp in graph.AdjacentList._adjList)
             {
-                List<T> related = new List<T>();
+                Dictionary<T, int> related = new Dictionary<T, int>();
                 foreach (var val in kvp.Value)
                 {
-                    related.Add(val);
+                    related.Add(val.Key, val.Value);
                 }
                 graphNodes.Add(new GraphNode<T>
                 {
@@ -61,20 +61,11 @@ namespace GraphLibrary
             AdjacentList = adjacentList;
         }
 
-        public Graph(string filePath, bool isAdj)
+        public Graph(string filePath)
         {
             var graphTxt = File.ReadLines(filePath);
-
-            if (isAdj)
-            {
-                var graphNodes = ParseFileAdj(graphTxt);
-                AdjacentList = new GraphAdjacentList<T>(graphNodes);
-            }
-            else
-            {
-                EdgeList = ParseFileEdge(graphTxt);
-                PrintEdgeList();
-            }
+            var graphNodes = ParseFile(graphTxt);
+            AdjacentList = new GraphAdjacentList<T>(graphNodes);
         }
 
         public void AddNode(GraphNode<T> node)
@@ -82,39 +73,39 @@ namespace GraphLibrary
             AdjacentList.AddNode(node, IsDirected);
         }
 
-        //public void AddEdge(T name1, T name2)
-        //{
-        //    AdjacentList.AddEdge(name1, name2, IsDirected);
-        //}
-
-        public void AddEdge(string name, GraphEdge<T> edge)
+        public void AddEdge(T name1, T name2, int weight)
         {
-            EdgeList.Add(name, edge);
-            AdjacentList.AddEdge(edge.Node1, edge.Node2, IsDirected);
+            AdjacentList.AddEdge(name1, name2, IsDirected, weight);
         }
+
+        //public void AddEdge(string name, GraphEdge<T> edge)
+        //{
+        //    EdgeList.Add(name, edge);
+        //    AdjacentList.AddEdge(edge.Node1, edge.Node2, IsDirected);
+        //}
 
         public void RemoveNode(T name)
         {
             AdjacentList.RemoveNode(name);
         }
 
-        //public void RemoveEdge(T name1, T name2)
-        //{
-        //    EdgeList.Remove(edgeName);
-        //    AdjacentList.RemoveEdge(name1, name2, IsDirected);
-        //}
-
-        public void RemoveEdge(string edgeName)
+        public void RemoveEdge(T name1, T name2)
         {
-            AdjacentList.RemoveEdge(EdgeList[edgeName].Node1, EdgeList[edgeName].Node2, IsDirected);
-            EdgeList.Remove(edgeName);
+            // EdgeList.Remove(edgeName);
+            AdjacentList.RemoveEdge(name1, name2, IsDirected);
         }
+
+        //public void RemoveEdge(string edgeName)
+        //{
+        //    AdjacentList.RemoveEdge(EdgeList[edgeName].Node1, EdgeList[edgeName].Node2, IsDirected);
+        //    EdgeList.Remove(edgeName);
+        //}
 
         public void WriteGraph(string fileName)
         {
             using(StreamWriter sw = new StreamWriter(fileName))
             {
-                sw.Write(AdjacentList.GraphToTxt());
+                sw.Write(AdjacentList.GraphToTxt(IsDirected, IsWeighted));
             }
         }
 
@@ -134,7 +125,7 @@ namespace GraphLibrary
             }
         }
 
-        private List<GraphNode<T>> ParseFileAdj(IEnumerable<string> graphTxt)
+        private List<GraphNode<T>> ParseFile(IEnumerable<string> graphTxt)
         {
             List<GraphNode<T>> graphNodes = new List<GraphNode<T>>();
 
@@ -142,46 +133,68 @@ namespace GraphLibrary
             IsDirected = graphOptions[0] == "1";
             IsWeighted = graphOptions[1] == "1";
 
-            foreach (var item in graphTxt.Skip(1))
+            foreach (var line in graphTxt.Skip(1))
             {
-                var nodeName = item.Split(':')[0];
-                var nodeRelated = item.Split(':')[1].Split(" ",
+                var nodeName = line.Split(":")[0];
+                var nodeRelated = line.Split(":")[1].Split(" ", 
                     StringSplitOptions.RemoveEmptyEntries).ToList();
-
-                List<T> nodeRelatedT = new List<T>();
-                foreach (var node in nodeRelated)
+                var node = new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T)));
+                foreach (var item in nodeRelated)
                 {
-                    nodeRelatedT.Add((T)Convert.ChangeType(node, typeof(T)));
+                    // node.Name = (T)Convert.ChangeType(item.Split("|")[0], typeof(T));
+                    node.Related.Add((T)Convert.ChangeType(item.Split("|")[0], typeof(T)),
+                        int.Parse(item.Split("|")[1]));
+                    //graphNodes.Add(new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T)),
+                    //    new Dictionary<T, int>
+                    //    {
+                    //        {(T)Convert.ChangeType( item.Split("|")[0], typeof(T)),
+                    //                                int.Parse(item.Split("|")[1]) }
+                    //    }));
                 }
-                graphNodes.Add(new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T))
-                                               , nodeRelatedT));
+                
+                graphNodes.Add(node);
             }
+
+            //foreach (var item in graphTxt.Skip(1))
+            //{
+            //    var nodeName = item.Split(':')[0];
+            //    var nodeRelated = item.Split(':')[1].Split(" ",
+            //        StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            //    List<T> nodeRelatedT = new List<T>();
+            //    foreach (var node in nodeRelated)
+            //    {
+            //        nodeRelatedT.Add((T)Convert.ChangeType(node, typeof(T)));
+            //    }
+            //    graphNodes.Add(new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T))
+            //                                   , nodeRelatedT));
+            //}
 
             return graphNodes;
         }
 
-        private Dictionary<string, GraphEdge<T>> ParseFileEdge(IEnumerable<string> graphTxt)
-        {
-            Dictionary<string, GraphEdge<T>> edgeList = new Dictionary<string, GraphEdge<T>>();
+        //private Dictionary<string, GraphEdge<T>> ParseFileEdge(IEnumerable<string> graphTxt)
+        //{
+        //    Dictionary<string, GraphEdge<T>> edgeList = new Dictionary<string, GraphEdge<T>>();
 
-            var graphOptions = graphTxt.FirstOrDefault().Split(" ");
-            IsDirected = graphOptions[0] == "1";
-            IsWeighted = graphOptions[1] == "1";
+        //    var graphOptions = graphTxt.FirstOrDefault().Split(" ");
+        //    IsDirected = graphOptions[0] == "1";
+        //    IsWeighted = graphOptions[1] == "1";
 
-            foreach (var edge in graphTxt.Skip(1))
-            {
-                var edgeName = edge.Split(":")[0];
-                var edgeInfo = edge.Split(':')[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        //    foreach (var edge in graphTxt.Skip(1))
+        //    {
+        //        var edgeName = edge.Split(":")[0];
+        //        var edgeInfo = edge.Split(':')[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                edgeList.Add(edgeName, new GraphEdge<T>
-                {
-                    Node1 = (T)Convert.ChangeType(edgeInfo[0], typeof(T)),
-                    Node2 = (T)Convert.ChangeType(edgeInfo[1], typeof(T)),
-                    Weight = IsWeighted ? int.Parse(edgeInfo[2].ToString()) : 0
-                });
-            }
+        //        edgeList.Add(edgeName, new GraphEdge<T>
+        //        {
+        //            Node1 = (T)Convert.ChangeType(edgeInfo[0], typeof(T)),
+        //            Node2 = (T)Convert.ChangeType(edgeInfo[1], typeof(T)),
+        //            Weight = IsWeighted ? int.Parse(edgeInfo[2].ToString()) : 0
+        //        });
+        //    }
 
-            return edgeList;
-        }
+        //    return edgeList;
+        //}
     }
 }

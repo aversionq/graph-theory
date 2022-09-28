@@ -6,12 +6,13 @@ namespace GraphLibrary
 {
     public class GraphAdjacentList<T>
     {
-        internal Dictionary<T, List<Dictionary<T, int>>> _adjList;
+        internal Dictionary<T, Dictionary<T, int>> _adjList;
 
         public GraphAdjacentList()
         {
-            _adjList = new Dictionary<T, List<Dictionary<T, int>>>();
+            _adjList = new Dictionary<T, Dictionary<T, int>>();
         }
+
         public GraphAdjacentList(List<GraphNode<T>> graphNodes) : this()
         {
             foreach (var node in graphNodes)
@@ -30,42 +31,55 @@ namespace GraphLibrary
 
         internal void AddNode(GraphNode<T> node, bool isDirected)
         {
+            _adjList.Add(node.Name, node.Related);
             if (!isDirected)
             {
-                foreach (var value in node.Related)
+                foreach (var kvp in node.Related)
                 {
-                    foreach (var kvp in value)
+                    if (kvp.Key.ToString() != node.Name.ToString())
                     {
-                        _adjList[kvp.Key].Add(value);
+                        _adjList[kvp.Key].Add(node.Name, node.Related[kvp.Key]);
                     }
                 }
             }
-            _adjList.Add(node.Name, node.Related);
         }
 
         internal void AddEdge(T name1, T name2, bool isDirected, int weight)
         {
-            _adjList[name1].Add(new Dictionary<T, int>
-            {
-                {name2, weight},
-            });
+            //_adjList[name1].Add(new Dictionary<T, int>
+            //{
+            //    {name2, weight},
+            //});
+            //if (!isDirected)
+            //{
+            //    _adjList[name2].Add(new Dictionary<T, int>
+            //    {
+            //        {name1, weight},
+            //    });
+            //}
+            _adjList[name1].Add(name2, weight);
             if (!isDirected)
             {
-                _adjList[name2].Add(new Dictionary<T, int>
-                {
-                    {name1, weight},
-                });
+                _adjList[name2].Add(name1, weight);
             }
         }
 
         internal void RemoveNode(T name)
         {
-            foreach (var value in _adjList.Values)
+            //foreach (var value in _adjList.Values)
+            //{
+            //    foreach (var dict in value)
+            //    {
+            //        if (dict.ContainsKey(name))
+            //        {
+            //            dict.Remove(name);
+            //        }
+            //    }
+            //}
+            //_adjList.Remove(name);
+            foreach (var kvp in _adjList)
             {
-                if (value.Contains(name))
-                {
-                    value.Remove(name);
-                }
+                _adjList[kvp.Key].Remove(name);
             }
             _adjList.Remove(name);
         }
@@ -79,16 +93,34 @@ namespace GraphLibrary
             }
         }
 
-        internal string GraphToTxt()
+        internal string GraphToTxt(bool isDirected, bool isWeighted)
         {
             StringBuilder adj = new StringBuilder();
+
+            if (isDirected)
+            {
+                adj.Append("1 ");
+            }
+            else
+            {
+                adj.Append("0 ");
+            }
+
+            if (isWeighted)
+            {
+                adj.Append("1" + Environment.NewLine);
+            }
+            else
+            {
+                adj.Append("0" + Environment.NewLine);
+            }
 
             foreach (var kvp in _adjList)
             {
                 adj.Append($"{kvp.Key}: ");
                 foreach (var node in kvp.Value)
                 {
-                    adj.Append($"{node} ");
+                    adj.Append($"{node.Key}|{node.Value} ");
                 }
                 adj.Append(Environment.NewLine);
             }
@@ -115,10 +147,10 @@ namespace GraphLibrary
             StringBuilder adjListPrint = new StringBuilder("Graph adjacent list:");
             foreach (var kvp in _adjList)
             {
-                adjListPrint.Append(Environment.NewLine + $"{kvp.Key} : ");
+                adjListPrint.Append(Environment.NewLine + $"{kvp.Key} :");
                 foreach (var value in kvp.Value)
                 {
-                    adjListPrint.Append($"{value} ");
+                    adjListPrint.Append($" Node: {value.Key}, Weight = {value.Value} ||");
                 }
             }
             return adjListPrint.ToString();
