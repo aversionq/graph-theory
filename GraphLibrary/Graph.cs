@@ -63,9 +63,16 @@ namespace GraphLibrary
 
         public Graph(string filePath)
         {
-            var graphTxt = File.ReadLines(filePath);
-            var graphNodes = ParseFile(graphTxt);
-            AdjacentList = new GraphAdjacentList<T>(graphNodes);
+            try
+            {
+                var graphTxt = File.ReadLines(filePath);
+                var graphNodes = ParseFile(graphTxt);
+                AdjacentList = new GraphAdjacentList<T>(graphNodes);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void AddNode(GraphNode<T> node)
