@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GraphLibrary;
 
 namespace Graph_ConsoleUI
 {
     internal class Program
     {
+        private static Graph<int> graph;
+
         static void Main(string[] args)
         {
             //List<GraphNode<int>> graphNodes = new List<GraphNode<int>>
@@ -162,25 +165,162 @@ namespace Graph_ConsoleUI
             //Console.WriteLine(graph);
             //Console.WriteLine(graphTest);
 
-            Console.WriteLine("Input graph file name: ");
-            var userInput = Console.ReadLine();
-            var filePath = @$"C:\prog\CODE\C#\GraphTheory_L1\{userInput}.txt";
-            try
+            while (true)
             {
-                var graph = new Graph<int>(filePath);
-                Console.WriteLine("Graph loaded!");
-            }
-            catch (Exception)
-            {
-
+                Console.WriteLine("Input graph file name: ");
+                var userInput = Console.ReadLine();
+                var filePath = @$"C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\{userInput}.txt";
+                if (File.Exists(filePath))
+                {
+                    graph = new Graph<int>(filePath);
+                    Console.WriteLine("Graph loaded!");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Error! File not found. Try again.");
+                }
             }
 
             var welcomeString = "Choose one of the options:" + Environment.NewLine +
-                                "1. Print Graph adjacent list" + Environment.NewLine +
-                                "2. Add Node" + Environment.NewLine + "3. Add Edge" +
-                                Environment.NewLine + "4. Remove Node" + Environment.NewLine +
-                                "5. Remove Edge" + Environment.NewLine + "6. Write graph to .txt file"
-                                + Environment.NewLine + "7. Exit";
+                    "1. Print Graph adjacent list" + Environment.NewLine +
+                    "2. Add Node" + Environment.NewLine + "3. Add Edge" +
+                    Environment.NewLine + "4. Remove Node" + Environment.NewLine +
+                    "5. Remove Edge" + Environment.NewLine + "6. Write graph to .txt file"
+                    + Environment.NewLine + "7. Exit";
+
+            while (true)
+            {
+                Console.WriteLine(welcomeString);
+                int choice;
+                var res = int.TryParse(Console.ReadLine(), out choice);
+
+                if (res)
+                {
+
+                    if (choice == 1)
+                    {
+                        Console.WriteLine(graph);
+                    }
+
+                    else if (choice == 2)
+                    {
+                        Console.WriteLine("Input node name: ");
+                        var nodeName = int.Parse(Console.ReadLine());
+
+                        var related = new Dictionary<int, int>();
+                        Console.WriteLine("Input amount of related nodes: ");
+                        var relAmount = int.Parse(Console.ReadLine());
+                        for (int i = 0; i < relAmount; i++)
+                        {
+                            Console.WriteLine("Input related node name: ");
+                            int nodeRel = int.Parse(Console.ReadLine());
+                            if (graph.IsNodeExists(nodeRel))
+                            {
+                                Console.WriteLine($"Input weight for edge" +
+                                    $"{nodeName} - {nodeRel}");
+                                var weight = int.Parse(Console.ReadLine());
+                                related.Add(nodeRel, weight);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Error! There is no " +
+                                    $"{nodeRel} node in this graph.");
+                            }
+                        }
+                        var node = new GraphNode<int>(nodeName, related);
+                        graph.AddNode(node);
+                        Console.WriteLine($"Node {nodeName} added to the graph!");
+                    }
+
+                    else if (choice == 3)
+                    {
+                        Console.WriteLine("Input first node name (from which): ");
+                        int node1 = int.Parse(Console.ReadLine());
+                        if (!graph.IsNodeExists(node1))
+                        {
+                            Console.WriteLine($"Error! Node {node1} doesn't exist.");
+                            break;
+                        }
+                        Console.WriteLine("Input second node name (to which): ");
+                        int node2 = int.Parse(Console.ReadLine());
+                        if (!graph.IsNodeExists(node2))
+                        {
+                            Console.WriteLine($"Error! Node {node2} doesn't exist.");
+                            break;
+                        }
+                        Console.WriteLine($"Input weight for the " +
+                            $"{node1} - {node2} edge: ");
+                        int weight = int.Parse(Console.ReadLine());
+
+                        graph.AddEdge(node1, node2, weight);
+                        Console.WriteLine($"Edge {node1} - {node2} added");
+                    }
+
+                    else if (choice == 4)
+                    {
+                        Console.WriteLine("Input node name: ");
+                        int node = int.Parse(Console.ReadLine());
+                        if (!graph.IsNodeExists(node))
+                        {
+                            Console.WriteLine($"Error! Node {node} doesn't" +
+                                $" exist in this graph.");
+                            break;
+                        }
+
+                        graph.RemoveNode(node);
+                        Console.WriteLine($"Node {node} removed from the graph!");
+                    }
+
+                    else if (choice == 5)
+                    {
+                        Console.WriteLine("Input first node name: ");
+                        int node1 = int.Parse(Console.ReadLine());
+                        if (!graph.IsNodeExists(node1))
+                        {
+                            Console.WriteLine($"Error! Node {node1} doesn't exist.");
+                            break;
+                        }
+                        Console.WriteLine("Input second node name: ");
+                        int node2 = int.Parse(Console.ReadLine());
+                        if (!graph.IsNodeExists(node2))
+                        {
+                            Console.WriteLine($"Error! Node {node2} doesn't exist.");
+                            break;
+                        }
+
+                        graph.RemoveEdge(node1, node2);
+                        Console.WriteLine($"Edge {node1} - " +
+                            $"{node2} removed from the graph!");
+                    }
+
+                    else if (choice == 6)
+                    {
+                        Console.WriteLine("Input file name: ");
+                        var fileName = Console.ReadLine();
+
+                        graph.WriteGraph($"{fileName}.txt");
+                        Console.WriteLine("Done! You can see your .txt graph file at:" +
+                            @"~GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1");
+                    }
+
+                    else if (choice == 7)
+                    {
+                        Console.WriteLine("End of work.");
+                        break;
+                    }
+
+                    else if (choice > 7 || choice < 1)
+                    {
+                        Console.WriteLine("Error! Wrong option number.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error! Input int value.");
+                    break;
+                }
+            }
         }
     }
 }

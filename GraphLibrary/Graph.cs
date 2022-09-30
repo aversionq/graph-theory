@@ -116,9 +116,9 @@ namespace GraphLibrary
             }
         }
 
-        public void IsNodeExists(T name)
+        public bool IsNodeExists(T name)
         {
-            AdjacentList.IsNodeExists(name);
+            return AdjacentList.IsNodeExists(name);
         }
 
         public override string ToString() => AdjacentList.Print();
