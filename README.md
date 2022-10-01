@@ -1,0 +1,2 @@
+# graph-theory
+university tasks
