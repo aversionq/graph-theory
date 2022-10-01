@@ -187,7 +187,8 @@ namespace Graph_ConsoleUI
                     "2. Add Node" + Environment.NewLine + "3. Add Edge" +
                     Environment.NewLine + "4. Remove Node" + Environment.NewLine +
                     "5. Remove Edge" + Environment.NewLine + "6. Write graph to .txt file"
-                    + Environment.NewLine + "7. Exit";
+                    + Environment.NewLine + "7. Print graph edge list" + Environment.NewLine +
+                    "8. Exit";
 
             while (true)
             {
@@ -306,11 +307,17 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 7)
                     {
+                        graph.PrintEdgeList();
+                        Console.WriteLine("End of work.");
+                    }
+
+                    else if (choice == 8)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 7 || choice < 1)
+                    else if (choice > 8 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }

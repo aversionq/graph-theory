@@ -155,5 +155,28 @@ namespace GraphLibrary
             }
             return adjListPrint.ToString();
         }
+
+        internal Dictionary<string, GraphEdge<T>> AdjacentListToEdgeList()
+        {
+            Dictionary<string, GraphEdge<T>> edgeDict = new Dictionary<string, GraphEdge<T>>();
+
+            char charInc = (char)65;
+            foreach (var kvp in _adjList)
+            {
+                foreach (var related in kvp.Value)
+                {
+                    var edge = new GraphEdge<T>
+                    {
+                        Node1 = kvp.Key,
+                        Node2 = related.Key,
+                        Weight = related.Value
+                    };
+                    edgeDict.Add(charInc.ToString(), edge);
+                    charInc++;
+                }
+            }
+
+            return edgeDict;
+        }
     }
 }

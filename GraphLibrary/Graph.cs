@@ -125,9 +125,11 @@ namespace GraphLibrary
 
         public void PrintEdgeList()
         {
+            CreateEdgeList();
+
             foreach (var edge in EdgeList)
             {
-                Console.WriteLine($"{edge.Key}:" +
+                Console.WriteLine($"{edge.Key} : " +
                     $"{edge.Value.Node1} - {edge.Value.Node2} | Weight = {edge.Value.Weight}");
             }
         }
@@ -149,14 +151,21 @@ namespace GraphLibrary
                 foreach (var item in nodeRelated)
                 {
                     // node.Name = (T)Convert.ChangeType(item.Split("|")[0], typeof(T));
-                    node.Related.Add((T)Convert.ChangeType(item.Split("|")[0], typeof(T)),
-                        int.Parse(item.Split("|")[1]));
-                    //graphNodes.Add(new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T)),
-                    //    new Dictionary<T, int>
-                    //    {
-                    //        {(T)Convert.ChangeType( item.Split("|")[0], typeof(T)),
-                    //                                int.Parse(item.Split("|")[1]) }
-                    //    }));
+                    if (IsWeighted || item.Contains("|"))
+                    {
+                        node.Related.Add((T)Convert.ChangeType(item.Split("|")[0], typeof(T)),
+                            int.Parse(item.Split("|")[1]));
+                        //graphNodes.Add(new GraphNode<T>((T)Convert.ChangeType(nodeName, typeof(T)),
+                        //    new Dictionary<T, int>
+                        //    {
+                        //        {(T)Convert.ChangeType( item.Split("|")[0], typeof(T)),
+                        //                                int.Parse(item.Split("|")[1]) }
+                        //    }));
+                    }
+                    else
+                    {
+                        node.Related.Add((T)Convert.ChangeType(item, typeof(T)), 0);
+                    }
                 }
                 
                 graphNodes.Add(node);
@@ -178,6 +187,11 @@ namespace GraphLibrary
             //}
 
             return graphNodes;
+        }
+
+        private void CreateEdgeList()
+        {
+            EdgeList = AdjacentList.AdjacentListToEdgeList();
         }
 
         //private Dictionary<string, GraphEdge<T>> ParseFileEdge(IEnumerable<string> graphTxt)
