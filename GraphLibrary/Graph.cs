@@ -13,6 +13,13 @@ namespace GraphLibrary
         public bool IsDirected { get; private set; }
         public bool IsWeighted { get; private set; }
 
+        public Graph()
+        {
+            IsDirected = false;
+            IsWeighted = false;
+            AdjacentList = new GraphAdjacentList<T>();
+        }
+
         public Graph(bool isDirected, bool isWeighted)
         {
             //if (isDirected)

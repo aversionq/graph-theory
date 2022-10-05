@@ -31,7 +31,14 @@ namespace GraphLibrary
 
         internal void AddNode(GraphNode<T> node, bool isDirected)
         {
-            _adjList.Add(node.Name, node.Related);
+            if (!_adjList.ContainsKey(node.Name))
+            {
+                _adjList.Add(node.Name, node.Related);
+            }
+            else
+            {
+                throw new Exception();
+            }
             if (!isDirected)
             {
                 foreach (var kvp in node.Related)
@@ -57,7 +64,14 @@ namespace GraphLibrary
             //        {name1, weight},
             //    });
             //}
-            _adjList[name1].Add(name2, weight);
+            if (!_adjList.ContainsKey(name1))
+            {
+                _adjList[name1].Add(name2, weight);
+            }
+            else
+            {
+                throw new Exception();
+            }
             if (!isDirected)
             {
                 _adjList[name2].Add(name1, weight);

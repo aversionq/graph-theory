@@ -206,56 +206,71 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 2)
                     {
-                        Console.WriteLine("Input node name: ");
-                        var nodeName = int.Parse(Console.ReadLine());
-
-                        var related = new Dictionary<int, int>();
-                        Console.WriteLine("Input amount of related nodes: ");
-                        var relAmount = int.Parse(Console.ReadLine());
-                        for (int i = 0; i < relAmount; i++)
+                        try
                         {
-                            Console.WriteLine("Input related node name: ");
-                            int nodeRel = int.Parse(Console.ReadLine());
-                            if (graph.IsNodeExists(nodeRel))
+                            Console.WriteLine("Input node name: ");
+                            var nodeName = int.Parse(Console.ReadLine());
+
+                            var related = new Dictionary<int, int>();
+                            Console.WriteLine("Input amount of related nodes: ");
+                            var relAmount = int.Parse(Console.ReadLine());
+                            for (int i = 0; i < relAmount; i++)
                             {
-                                Console.WriteLine($"Input weight for edge" +
-                                    $"{nodeName} - {nodeRel}");
-                                var weight = int.Parse(Console.ReadLine());
-                                related.Add(nodeRel, weight);
+                                Console.WriteLine("Input related node name: ");
+                                int nodeRel = int.Parse(Console.ReadLine());
+                                if (graph.IsNodeExists(nodeRel))
+                                {
+                                    Console.WriteLine($"Input weight for edge" +
+                                        $"{nodeName} - {nodeRel}");
+                                    var weight = int.Parse(Console.ReadLine());
+                                    related.Add(nodeRel, weight);
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Error! There is no " +
+                                        $"{nodeRel} node in this graph.");
+                                }
                             }
-                            else
-                            {
-                                Console.WriteLine($"Error! There is no " +
-                                    $"{nodeRel} node in this graph.");
-                            }
+                            var node = new GraphNode<int>(nodeName, related);
+                            graph.AddNode(node);
+                            Console.WriteLine($"Node {nodeName} added to the graph!");
                         }
-                        var node = new GraphNode<int>(nodeName, related);
-                        graph.AddNode(node);
-                        Console.WriteLine($"Node {nodeName} added to the graph!");
+                        catch
+                        {
+                            Console.WriteLine("This node already exists!");
+                        }
                     }
 
                     else if (choice == 3)
                     {
-                        Console.WriteLine("Input first node name (from which): ");
-                        int node1 = int.Parse(Console.ReadLine());
-                        if (!graph.IsNodeExists(node1))
+                        try
                         {
-                            Console.WriteLine($"Error! Node {node1} doesn't exist.");
-                            break;
-                        }
-                        Console.WriteLine("Input second node name (to which): ");
-                        int node2 = int.Parse(Console.ReadLine());
-                        if (!graph.IsNodeExists(node2))
-                        {
-                            Console.WriteLine($"Error! Node {node2} doesn't exist.");
-                            break;
-                        }
-                        Console.WriteLine($"Input weight for the " +
-                            $"{node1} - {node2} edge: ");
-                        int weight = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Input first node name (from which): ");
+                            int node1 = int.Parse(Console.ReadLine());
+                            if (!graph.IsNodeExists(node1))
+                            {
+                                Console.WriteLine($"Error! Node {node1} doesn't exist.");
+                                break;
+                            }
+                            Console.WriteLine("Input second node name (to which): ");
+                            int node2 = int.Parse(Console.ReadLine());
+                            if (!graph.IsNodeExists(node2))
+                            {
+                                Console.WriteLine($"Error! Node {node2} doesn't exist.");
+                                break;
+                            }
+                            Console.WriteLine($"Input weight for the " +
+                                $"{node1} - {node2} edge: ");
+                            int weight = int.Parse(Console.ReadLine());
 
-                        graph.AddEdge(node1, node2, weight);
-                        Console.WriteLine($"Edge {node1} - {node2} added");
+                            graph.AddEdge(node1, node2, weight);
+                            Console.WriteLine($"Edge {node1} - {node2} added");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("This edge already exists!");
+                            // break;
+                        }
                     }
 
                     else if (choice == 4)
@@ -266,11 +281,12 @@ namespace Graph_ConsoleUI
                         {
                             Console.WriteLine($"Error! Node {node} doesn't" +
                                 $" exist in this graph.");
-                            break;
                         }
-
-                        graph.RemoveNode(node);
-                        Console.WriteLine($"Node {node} removed from the graph!");
+                        else
+                        {
+                            graph.RemoveNode(node);
+                            Console.WriteLine($"Node {node} removed from the graph!");
+                        }
                     }
 
                     else if (choice == 5)
