@@ -188,7 +188,9 @@ namespace Graph_ConsoleUI
                     Environment.NewLine + "4. Remove Node" + Environment.NewLine +
                     "5. Remove Edge" + Environment.NewLine + "6. Write graph to .txt file"
                     + Environment.NewLine + "7. Print graph edge list" + Environment.NewLine +
-                    "8. Exit";
+                    "Tasks:" + Environment.NewLine + "8. Calculate inclination degree" +
+                    Environment.NewLine + "9. Find isolated nodes" + Environment.NewLine +
+                    "10. Exit";
 
             while (true)
             {
@@ -329,11 +331,43 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 8)
                     {
+                        Console.WriteLine("Input node name: ");
+                        var name = int.Parse(Console.ReadLine());
+
+                        if (graph.IsNodeExists(name))
+                        {
+                            var nodeDegree = GraphHelper.CalculateInclinationDegree(graph.AdjacentList, name);
+                            Console.WriteLine($"Inclination degree of node {name} is {nodeDegree}.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error! Node {name} doesn't exist.");
+                        }
+                    }
+
+                    else if (choice == 9)
+                    {
+                        var isolated = GraphHelper.FindIsolatedNodes(graph.AdjacentList);
+                        if (isolated.Count > 0)
+                        {
+                            foreach (var node in isolated)
+                            {
+                                Console.WriteLine($"Node {node} is isolated in this graph.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no isolated nodes in this graph.");
+                        }
+                    }
+
+                    else if (choice == 10)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 8 || choice < 1)
+                    else if (choice > 10 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }
