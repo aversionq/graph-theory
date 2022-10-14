@@ -190,7 +190,7 @@ namespace Graph_ConsoleUI
                     + Environment.NewLine + "7. Print graph edge list" + Environment.NewLine +
                     "Tasks:" + Environment.NewLine + "8. Calculate inclination degree" +
                     Environment.NewLine + "9. Find isolated nodes" + Environment.NewLine +
-                    "10. Exit";
+                    "10. Union with another directed graph" + Environment.NewLine + "11. Exit";
 
             while (true)
             {
@@ -363,11 +363,35 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 10)
                     {
+                        while (true)
+                        {
+                            Console.WriteLine("Input graph file name: ");
+                            var userInput = Console.ReadLine();
+                            var filePath = @$"C:\prog\CODE\C#\GraphTheory_L1\Graph_ConsoleUI\bin\Debug\netcoreapp3.1\{userInput}.txt";
+                            if (File.Exists(filePath))
+                            {
+                                var graph2 = new Graph<int>(filePath);
+                                Console.WriteLine("Graph loaded!");
+                                Console.WriteLine("Input the weight for the connective edge: ");
+                                var weight = int.Parse(Console.ReadLine());
+                                GraphHelper.UnionDirectedGraphs(graph.AdjacentList, graph2.AdjacentList, weight);
+                                Console.WriteLine("Union done!");
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error! File not found. Try again.");
+                            }
+                        }
+                    }
+
+                    else if (choice == 11)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 10 || choice < 1)
+                    else if (choice > 11 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }

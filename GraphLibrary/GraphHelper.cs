@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace GraphLibrary
 {
@@ -41,6 +42,31 @@ namespace GraphLibrary
             }
 
             return isolatedNodes;
+        }
+
+        public static void UnionDirectedGraphs(GraphAdjacentList<int> adj1,
+            GraphAdjacentList<int> adj2, int weight)
+        {
+            var maxKey1 = adj1._adjList.Keys.Max();
+            var maxKey2 = adj2._adjList.Keys.Max();
+
+            foreach (var kvp in adj2._adjList)
+            {
+                Dictionary<int, int> related = new Dictionary<int, int>();
+                foreach (var val in kvp.Value)
+                {
+                    related.Add(val.Key, val.Value);
+                }
+                //graphNodes.Add(new GraphNode<int>
+                //{
+                //    Name = kvp.Key,
+                //    Related = related
+                //});
+                adj1._adjList.Add(kvp.Key, related);
+            }
+
+            adj1._adjList[maxKey1].Add(maxKey2, weight);
+            adj2._adjList[maxKey2].Add(maxKey1, weight);
         }
     }
 }
