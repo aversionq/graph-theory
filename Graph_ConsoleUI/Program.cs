@@ -395,12 +395,9 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 11)
                     {
-                        var cycle = false;
                         var color = new List<int>();
                         color.AddRange(Enumerable.Repeat(0, graph.NodesAmount));
-                        var p = new List<int>();
-                        p.AddRange(Enumerable.Repeat(-1, graph.NodesAmount));
-                        if (GraphHelper.IsCyclicGraph(1, graph.AdjacentList, ref cycle, color, p))
+                        if (GraphHelper.IsCyclicGraph(1, graph.AdjacentList, color))
                         {
                             Console.WriteLine("This graph has at least 1 cycle.");
                         }

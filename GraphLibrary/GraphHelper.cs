@@ -94,8 +94,7 @@ namespace GraphLibrary
         //    return vNodes;
         //}
 
-        public static bool IsCyclicGraph(int nodeName, GraphAdjacentList<int> adjList, ref bool cycle
-            , List<int> color, List<int> p)
+        public static bool IsCyclicGraph(int nodeName, GraphAdjacentList<int> adjList, List<int> color)
         {
             color[nodeName - 1] = 1;
             foreach (var node in adjList._adjList[nodeName])
@@ -103,21 +102,19 @@ namespace GraphLibrary
                 int start = node.Key;
                 if (color[start - 1] == 0)
                 {
-                    p[start - 1] = nodeName;
-                    if (IsCyclicGraph(start, adjList, ref cycle, color, p))
+                    if (IsCyclicGraph(start, adjList, color))
                     {
-                        // return true;
+                        return true;
                     }
                 }
                 else if (color[start - 1] == 1)
                 {
-                    cycle = true;
-                    // return true;
+                    return true;
                 }
             }
 
             color[nodeName - 1] = 2;
-            return cycle;
+            return false;
         }
     }
 }
