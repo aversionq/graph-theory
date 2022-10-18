@@ -68,5 +68,56 @@ namespace GraphLibrary
             adj1._adjList[maxKey1].Add(maxKey2, weight);
             adj2._adjList[maxKey2].Add(maxKey1, weight);
         }
+
+        //private static void DFSHelper(int nodeName, List<int> visited, GraphAdjacentList<int> adjList, List<int> vNodes)
+        //{
+        //    if (visited.Contains(nodeName))
+        //    {
+        //        return;
+        //    }
+
+        //    visited.Add(nodeName);
+        //    var nList = adjList._adjList[nodeName];
+        //    foreach (var node in nList)
+        //    {
+        //        vNodes.Add(node.Key);
+        //        DFSHelper(node.Key, visited, adjList, vNodes);
+        //    }
+        //}
+
+        //public static List<int> DFS(GraphAdjacentList<int> adjList, int nodeName)
+        //{
+        //    var visitedNodes = new List<int>();
+        //    var vNodes = new List<int>();
+        //    DFSHelper(nodeName, visitedNodes, adjList, vNodes);
+
+        //    return vNodes;
+        //}
+
+        public static bool IsCyclicGraph(int nodeName, GraphAdjacentList<int> adjList, ref bool cycle
+            , List<int> color, List<int> p)
+        {
+            color[nodeName - 1] = 1;
+            foreach (var node in adjList._adjList[nodeName])
+            {
+                int start = node.Key;
+                if (color[start - 1] == 0)
+                {
+                    p[start - 1] = nodeName;
+                    if (IsCyclicGraph(start, adjList, ref cycle, color, p))
+                    {
+                        // return true;
+                    }
+                }
+                else if (color[start - 1] == 1)
+                {
+                    cycle = true;
+                    // return true;
+                }
+            }
+
+            color[nodeName - 1] = 2;
+            return cycle;
+        }
     }
 }

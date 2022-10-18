@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GraphLibrary;
 
 namespace Graph_ConsoleUI
@@ -190,7 +191,14 @@ namespace Graph_ConsoleUI
                     + Environment.NewLine + "7. Print graph edge list" + Environment.NewLine +
                     "Tasks:" + Environment.NewLine + "8. Calculate inclination degree" +
                     Environment.NewLine + "9. Find isolated nodes" + Environment.NewLine +
-                    "10. Union with another directed graph" + Environment.NewLine + "11. Exit";
+                    "10. Union with another directed graph" + Environment.NewLine + 
+                    "11. Check if graph is acyclic" + Environment.NewLine + "12. Exit";
+
+            //var test = GraphHelper.DFS(graph.AdjacentList, 1);
+            //foreach (var item in test)
+            //{
+            //    Console.WriteLine(item + " ");
+            //}
 
             while (true)
             {
@@ -387,11 +395,28 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 11)
                     {
+                        var cycle = false;
+                        var color = new List<int>();
+                        color.AddRange(Enumerable.Repeat(0, graph.NodesAmount));
+                        var p = new List<int>();
+                        p.AddRange(Enumerable.Repeat(-1, graph.NodesAmount));
+                        if (GraphHelper.IsCyclicGraph(1, graph.AdjacentList, ref cycle, color, p))
+                        {
+                            Console.WriteLine("This graph has at least 1 cycle.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("This graph is acyclic.");
+                        }
+                    }
+
+                    else if (choice == 12)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 11 || choice < 1)
+                    else if (choice > 12 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }
