@@ -94,18 +94,25 @@ namespace GraphLibrary
         //    return vNodes;
         //}
 
-        // MADE BY ZXC GHOUL 1337 69 AVERSIONQ
-        // Если чёто не так работает, то жёстко спизжено с интернета.
-        public static bool IsCyclicGraph(int nodeName, GraphAdjacentList<int> adjList,
-            ref bool cycle, List<int> color)
+        public static bool IsCyclicGraph(int nodeName, GraphAdjacentList<int> adjList, ref bool cycle
+            , List<int> color, List<int> p)
         {
             color[nodeName - 1] = 1;
             foreach (var node in adjList._adjList[nodeName])
             {
                 int start = node.Key;
-                if (color[start - 1] == 1)
+                if (color[start - 1] == 0)
+                {
+                    p[start - 1] = nodeName;
+                    if (IsCyclicGraph(start, adjList, ref cycle, color, p))
+                    {
+                        // return true;
+                    }
+                }
+                else if (color[start - 1] == 1)
                 {
                     cycle = true;
+                    // return true;
                 }
             }
 
