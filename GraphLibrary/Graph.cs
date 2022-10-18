@@ -12,6 +12,13 @@ namespace GraphLibrary
         public Dictionary<string, GraphEdge<T>> EdgeList { get; private set; }
         public bool IsDirected { get; private set; }
         public bool IsWeighted { get; private set; }
+        public int NodesAmount
+        {
+            get
+            {
+                return AdjacentList._adjList.Count;
+            }
+        }
 
         public Graph()
         {
