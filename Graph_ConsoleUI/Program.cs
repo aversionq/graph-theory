@@ -194,12 +194,6 @@ namespace Graph_ConsoleUI
                     "10. Union with another directed graph" + Environment.NewLine + 
                     "11. Check if graph is acyclic" + Environment.NewLine + "12. Exit";
 
-            //var test = GraphHelper.DFS(graph.AdjacentList, 1);
-            //foreach (var item in test)
-            //{
-            //    Console.WriteLine(item + " ");
-            //}
-
             while (true)
             {
                 Console.WriteLine(welcomeString);
@@ -400,10 +394,12 @@ namespace Graph_ConsoleUI
                         if (GraphHelper.IsCyclicGraph(1, graph.AdjacentList, color))
                         {
                             Console.WriteLine("This graph has at least 1 cycle.");
+                            Console.WriteLine();
                         }
                         else
                         {
                             Console.WriteLine("This graph is acyclic.");
+                            Console.WriteLine();
                         }
                     }
 

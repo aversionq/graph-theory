@@ -48,7 +48,10 @@ namespace GraphLibrary
             GraphAdjacentList<int> adj2, int weight)
         {
             var maxKey1 = adj1._adjList.Keys.Max();
-            var maxKey2 = adj2._adjList.Keys.Max();
+            var minKey2 = adj2._adjList.Keys.Min();
+
+            adj1._adjList[maxKey1].Add(minKey2, weight);
+            adj2._adjList[minKey2].Add(maxKey1, weight);
 
             foreach (var kvp in adj2._adjList)
             {
@@ -64,9 +67,6 @@ namespace GraphLibrary
                 //});
                 adj1._adjList.Add(kvp.Key, related);
             }
-
-            adj1._adjList[maxKey1].Add(maxKey2, weight);
-            adj2._adjList[maxKey2].Add(maxKey1, weight);
         }
 
         //private static void DFSHelper(int nodeName, List<int> visited, GraphAdjacentList<int> adjList, List<int> vNodes)
