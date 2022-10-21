@@ -64,7 +64,7 @@ namespace GraphLibrary
             //        {name1, weight},
             //    });
             //}
-            if (!_adjList.ContainsKey(name1))
+            if (_adjList.ContainsKey(name1))
             {
                 _adjList[name1].Add(name2, weight);
             }
