@@ -116,5 +116,92 @@ namespace GraphLibrary
             color[nodeName - 1] = 2;
             return false;
         }
+
+        private static void DFSHelper(int nodeName, List<bool> marked, List<int> order, GraphAdjacentList<int> adj)
+        {
+            marked[nodeName - 1] = true;
+            foreach (var node in adj._adjList[nodeName])
+            {
+                if (!marked[node.Key - 1])
+                {
+                    DFSHelper(node.Key, marked, order, adj);
+                }
+            }
+            order.Add(nodeName);
+        }
+
+        private static void DFSTransponseHelper(int nodeName, List<bool> marked, List<int> components, GraphAdjacentList<int> adj)
+        {
+            marked[nodeName - 1] = true;
+            components.Add(nodeName);
+            foreach (var node in adj._adjList[nodeName])
+            {
+                if (!marked[node.Key - 1])
+                {
+                    DFSHelper(node.Key, marked, components, adj);
+                }
+            }
+        }
+
+        public static Graph<int> TransposeGraph(GraphAdjacentList<int> adjList)
+        {
+            var transposeGraph = new Graph<int>(true, true);
+            for (int i = 0; i < adjList._adjList.Count; i++)
+            {
+                transposeGraph.AddNode(new GraphNode<int>
+                {
+                    Name = i + 1,
+                    Related = new Dictionary<int, int>()
+                });
+            }
+            foreach (var kvp in adjList._adjList)
+            {
+                foreach (var node in kvp.Value)
+                {
+                    transposeGraph.AddEdge(node.Key, kvp.Key, node.Value);
+                }
+            }
+
+            return transposeGraph;
+        }
+
+        public static List<List<int>> GetStronglyConnectedComponents(GraphAdjacentList<int> adjList)
+        {
+            List<int> components = new List<int>();
+            var compCopy = new List<List<int>>();
+            var transposeGraph = TransposeGraph(adjList);
+
+            var order = new List<int>();
+            var marked = new List<bool>(Enumerable.Repeat(false, adjList._adjList.Count));
+            for (int i = 0; i < adjList._adjList.Count; i++)
+            {
+                if (!marked[i])
+                {
+                    DFSHelper(i + 1, marked, order, adjList);
+                }
+            }
+
+            marked.Clear();
+            marked.AddRange(Enumerable.Repeat(false, adjList._adjList.Count));
+            for (int i = 0; i < adjList._adjList.Count; i++)
+            {
+                int v = order[marked.Count - 1 - i];
+                if (!marked[v - 1])
+                {
+                    DFSTransponseHelper(v + 1, marked, components, transposeGraph.AdjacentList);
+                    if (components.Count > 1)
+                    {
+                        compCopy.Add(new List<int>());
+                        foreach (var node in components)
+                        {
+                            compCopy[compCopy.Count - 1].Add(node);
+                        }
+                    }
+                    components.Clear();
+                }
+            }
+
+            return compCopy;
+        }
     }
 }
