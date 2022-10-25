@@ -203,7 +203,7 @@ namespace GraphLibrary
             return graphNodes;
         }
 
-        private void CreateEdgeList()
+        internal void CreateEdgeList()
         {
             EdgeList = AdjacentList.AdjacentListToEdgeList();
         }

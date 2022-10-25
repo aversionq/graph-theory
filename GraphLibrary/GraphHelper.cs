@@ -203,5 +203,54 @@ namespace GraphLibrary
 
             return compCopy;
         }
+
+        private static int FindSet(int v, List<int> parent)
+        {
+            if (v == parent[v - 1])
+            {
+                return v;
+            }
+            return parent[v - 1] = FindSet(parent[v - 1], parent);
+        }
+
+        private static void UnionSets(int a, int b, List<int> parent, List<int> rank)
+        {
+            a = FindSet(a, parent);
+            b = FindSet(b, parent);
+
+            if (a != b)
+            {
+                if (rank[a - 1] < rank[b - 1])
+                {
+                    (a, b) = (b, a);
+                }
+                parent[b - 1] = a;
+                if (rank[a - 1] == rank[b - 1])
+                {
+                    rank[a - 1]++;
+                }
+            }
+        }
+
+        public static Dictionary<string, GraphEdge<int>> Kruskal(Graph<int> graph)
+        {
+            var parent = new List<int>(Enumerable.Range(1, graph.AdjacentList._adjList.Count));
+            var rank = new List<int>(Enumerable.Repeat(0, graph.AdjacentList._adjList.Count));
+            var result = new Dictionary<string, GraphEdge<int>>();
+
+            graph.CreateEdgeList();
+            var sortedEdges = graph.EdgeList.OrderBy(e => e.Value.Weight);
+
+            foreach (var edge in sortedEdges)
+            {
+                if (FindSet(edge.Value.Node1, parent) != FindSet(edge.Value.Node2, parent))
+                {
+                    result.Add(edge.Key, edge.Value);
+                    UnionSets(edge.Value.Node1, edge.Value.Node2, parent, rank);
+                }
+            }
+
+            return result;
+        }
     }
 }

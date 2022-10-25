@@ -193,7 +193,8 @@ namespace Graph_ConsoleUI
                     Environment.NewLine + "9. Find isolated nodes" + Environment.NewLine +
                     "10. Union with another directed graph" + Environment.NewLine + 
                     "11. Check if graph is acyclic" + Environment.NewLine + 
-                    "12. Get strongly connected components" + Environment.NewLine + "13. Exit";
+                    "12. Get strongly connected components" + Environment.NewLine + 
+                    "13. Kruskal's algorithm" + Environment.NewLine + "14. Exit";
 
             while (true)
             {
@@ -421,11 +422,23 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 13)
                     {
+                        var carcass = GraphHelper.Kruskal(graph);
+                        int? cost = 0;
+                        foreach (var edge in carcass)
+                        {
+                            Console.WriteLine($"{edge.Key} : {edge.Value.Node1} <-> {edge.Value.Node2}");
+                            cost += edge.Value.Weight;
+                        }
+                        Console.WriteLine($"Total carcass weight: {cost}");
+                    }
+
+                    else if (choice == 14)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 13 || choice < 1)
+                    else if (choice > 14 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }
