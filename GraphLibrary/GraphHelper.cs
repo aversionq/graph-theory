@@ -252,5 +252,178 @@ namespace GraphLibrary
 
             return result;
         }
+
+        public static List<int> Dijkstra(GraphAdjacentList<int> adjList, int start)
+        {
+            var len = adjList._adjList.Count;
+            var distances = new List<int>(Enumerable.Repeat(int.MaxValue, len));
+            distances[start - 1] = 0;
+            var t = new List<bool>(Enumerable.Repeat(false, len));
+            var p = new List<int>(Enumerable.Repeat(int.MaxValue, len));
+
+            for (int i = 0; i < len; i++)
+            {
+                var min = int.MaxValue;
+                var cur = 0;
+                for (int j = 0; j < len; j++)
+                {
+                    if (distances[j] < min && !t[j])
+                    {
+                        min = distances[j];
+                        cur = j;
+                    }
+                }
+                t[cur] = true;
+
+                foreach (var kvp in adjList._adjList[cur + 1])
+                {
+                    var nodeIndex = kvp.Key - 1;
+                    if (distances[cur] + kvp.Value < distances[nodeIndex])
+                    {
+                        distances[nodeIndex] = distances[cur] + kvp.Value;
+                        p[nodeIndex] = cur;
+                    }
+                }
+            }
+
+            return distances;
+        }
+
+        public static List<List<int>> Floyd(GraphAdjacentList<int> adjList)
+        {
+            var len = adjList._adjList.Count;
+            var distances = new List<List<int>>();
+            for (int i = 0; i < len; i++)
+            {
+                distances.Add(new List<int>(Enumerable.Repeat(int.MaxValue, len)));
+            }
+
+            var index = 0;
+            foreach (var kvp in adjList._adjList)
+            {
+                distances[index][index] = 0;
+                foreach (var node in kvp.Value)
+                {
+                    var nodeIndex = node.Key - 1;
+                    distances[index][nodeIndex] = node.Value;
+                }
+                index++;
+            }
+
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = 0; j < len; j++)
+                {
+                    for (int k = 0; k < len; k++)
+                    {
+                        if (distances[j][i] != int.MaxValue && distances[i][k] != int.MaxValue)
+                        {
+                            var min = new List<int> { distances[j][k], distances[j][i] + distances[i][k] }.Min();
+                            distances[j][k] = min;
+                        }
+                    }
+                }
+            }
+
+            return distances;
+        }
+
+        public static Dictionary<List<int>, bool> BellmanFord(GraphAdjacentList<int> adjList, int start)
+        {
+            var len = adjList._adjList.Count;
+            List<int> distances = new List<int>(Enumerable.Repeat(int.MaxValue, len));
+            distances[start - 1] = 0;
+
+            for (int i = 0; i < len; i++)
+            {
+                foreach (var kvp in adjList._adjList)
+                {
+                    foreach (var node in kvp.Value)
+                    {
+                        var u = kvp.Key - 1;
+                        var v = node.Key - 1;
+                        var weight = node.Value;
+                        if (distances[u] != int.MaxValue && distances[u] + weight < distances[v])
+                        {
+                            distances[v] = distances[u] + weight;
+                        }
+                    }
+                }
+            }
+
+            var isNegCycle = false;
+            foreach (var kvp in adjList._adjList)
+            {
+                foreach (var node in kvp.Value)
+                {
+                    var u = kvp.Key - 1;
+                    var v = node.Key - 1;
+                    var weight = node.Value;
+                    if (distances[u] + weight < distances[v] && distances[u] != int.MaxValue)
+                    {
+                        isNegCycle = true;
+                    }
+                }
+            }
+
+            return new Dictionary<List<int>, bool>()
+            {
+                { distances,
+                isNegCycle }
+            };
+        }
+
+        private static int FordFulkersonHelper(List<bool> visited, int curIndex, int endIndex,
+            int maxFlow, GraphAdjacentList<int> adjList)
+        {
+            if (curIndex == endIndex)
+            {
+                return maxFlow;
+            }
+            visited[curIndex - 1] = true;
+            foreach (var node in adjList._adjList[curIndex])
+            {
+                int nodeIndex = node.Key - 1;
+                if (!visited[nodeIndex] && node.Value > 0)
+                {
+                    var minFlow = new List<int> { maxFlow, node.Value }.Min();
+                    var dist = FordFulkersonHelper(visited, node.Key, endIndex, minFlow, adjList);
+                    if (dist > 0)
+                    {
+                        var newWeight = node.Value - dist;
+                        adjList._adjList[curIndex].Remove(node.Key);
+                        adjList._adjList[curIndex].Add(node.Key, newWeight);
+                        foreach (var kvp in adjList._adjList[curIndex])
+                        {
+                            if (kvp.Key == curIndex)
+                            {
+                                var updWeight = kvp.Value + dist;
+                                adjList._adjList[curIndex].Remove(kvp.Key);
+                                adjList._adjList[curIndex].Add(kvp.Key, updWeight);
+                            }
+                        }
+
+                        return dist;
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        public static int FordFulkerson(int startIndex, int endIndex, GraphAdjacentList<int> adjList)
+        {
+            var flow = 0;
+            while (true)
+            {
+                var visited = new List<bool>(Enumerable.Repeat(false, adjList._adjList.Count));
+                var res = FordFulkersonHelper(visited, startIndex, endIndex, int.MaxValue, adjList);
+                if (res == 0)
+                {
+                    return flow;
+                }
+                flow += res;
+            }
+        }
     }
 }

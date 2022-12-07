@@ -194,7 +194,37 @@ namespace Graph_ConsoleUI
                     "10. Union with another directed graph" + Environment.NewLine + 
                     "11. Check if graph is acyclic" + Environment.NewLine + 
                     "12. Get strongly connected components" + Environment.NewLine + 
-                    "13. Kruskal's algorithm" + Environment.NewLine + "14. Exit";
+                    "13. Kruskal's algorithm" + Environment.NewLine + "14. Weight sum <= P"
+                    + Environment.NewLine + "15. Shortest paths from node" + Environment.NewLine +
+                    "16. N-periphery for node" + Environment.NewLine + "17. Find max flow (Ford Fulkerson)"
+                    + Environment.NewLine + "18. Exit";
+            var test = GraphHelper.Dijkstra(graph.AdjacentList, 1);
+            Console.WriteLine();
+            foreach (var item in test)
+            {
+                Console.Write($"{item} ");
+            }
+            Console.WriteLine();
+
+            var test2 = GraphHelper.Floyd(graph.AdjacentList);
+            Console.WriteLine();
+            foreach (var item in test2)
+            {
+                foreach (var val in item)
+                {
+                    Console.Write($"{val} ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            var test3 = GraphHelper.BellmanFord(graph.AdjacentList, 1).Keys.ToList();
+            Console.WriteLine();
+            foreach (var item in test3[0])
+            {
+                Console.Write($"{item} ");
+            }
+            Console.WriteLine();
 
             while (true)
             {
@@ -434,11 +464,107 @@ namespace Graph_ConsoleUI
 
                     else if (choice == 14)
                     {
+                        Console.WriteLine("Input P: ");
+                        var p = int.Parse(Console.ReadLine());
+
+                        for (int i = 0; i < graph.NodesAmount; i++)
+                        {
+                            var nodeDist = GraphHelper.Dijkstra(graph.AdjacentList, i + 1);
+                            var nodesSum = nodeDist.Sum();
+                            if (nodesSum <= p)
+                            {
+                                Console.WriteLine($"Node {i + 1} sum weight: {nodesSum}");
+                            }
+                        }
+                        Console.WriteLine();
+                    }
+
+                    else if (choice == 15)
+                    {
+                        Console.WriteLine("Input node name: ");
+                        var nodeName = int.Parse(Console.ReadLine());
+
+                        if (graph.IsNodeExists(nodeName))
+                        {
+                            var bellmaResult = GraphHelper.BellmanFord(graph.AdjacentList, nodeName);
+                            var isNegCycle = bellmaResult.Values.ToList();
+                            var dist = bellmaResult.Keys.ToList();
+                            if (!isNegCycle[0])
+                            {
+                                foreach (var val in dist[0])
+                                {
+                                    Console.Write($"{val} ");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("There is no shortest path " +
+                                    "in this graph because of negative cycle.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("This node does not exist.");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine();
+                    }
+
+                    else if (choice == 16)
+                    {
+                        Console.WriteLine("Input N: ");
+                        var n = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Input node name: ");
+                        var nodeName = int.Parse(Console.ReadLine());
+
+                        var nPeriphery = new List<int>();
+                        if (graph.IsNodeExists(nodeName))
+                        {
+                            var distances = GraphHelper.Floyd(graph.AdjacentList);
+                            for (int i = 0; i < distances.Count; i++)
+                            {
+                                if (distances[i][nodeName - 1] > n && (nodeName - 1) != i)
+                                {
+                                    nPeriphery.Add(i + 1);
+                                }
+                            }
+                            if (nPeriphery.Count > 0)
+                            {
+                                Console.WriteLine($"N-Periphery for node {nodeName}: ");
+                                foreach (var item in nPeriphery)
+                                {
+                                    Console.Write($"{item} ");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("There is no N-Periphery for this node.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("This node does not exist.");
+                        }
+                        Console.WriteLine();
+                    }
+
+                    else if (choice == 17)
+                    {
+                        Console.WriteLine(Environment.NewLine + "Input start node: ");
+                        var startNode = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Input end node: ");
+                        var endNode = int.Parse(Console.ReadLine());
+                        var maxFlow = GraphHelper.FordFulkerson(startNode, endNode, graph.AdjacentList);
+                        Console.WriteLine($"Maximum flow for this graph is: {maxFlow}" + Environment.NewLine);
+                    }
+
+                    else if (choice == 18)
+                    {
                         Console.WriteLine("End of work.");
                         break;
                     }
 
-                    else if (choice > 14 || choice < 1)
+                    else if (choice > 18 || choice < 1)
                     {
                         Console.WriteLine("Error! Wrong option number.");
                     }
